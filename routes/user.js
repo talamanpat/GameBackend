@@ -7,64 +7,23 @@ var Friend=require('../models/Friend');
 
 router.get('/:id?',function(req,res,next){
 
-if(req.params.id){
+    if(req.params.id){
 
-    User.getUserById(req.params.id,function(err,rows){
+        User.getUserById(req.params.id,function(err,rows){
 
-        if(err)
-        {
-            res.json(err);
-        }
-        else{
-            res.json(rows);
-        }
-    });
-}
-else{
-
- User.getAllUsers(function(err,rows){
-
-        if(err)
-        {
-            res.json(err);
-        }
-        else
-        {
-            res.json(rows);
-        }
- 
-    });
-}
-});
-router.post('/',function(req,res,next){
-
-        User.addUser(req.body,function(err,rows){
-
-            //console.log(req.body);
             if(err)
             {
                 res.json(err);
             }
             else{
-                res.json(rows);              
+
+                res.json({"users":rows});
             }
         });
-});
- router.post('/:id',function(req,res,next){
-  User.deleteAll(req.body,function(err,count){
-    if(err)
-    {
-      res.json(err);
     }
-    else
-    {
-      res.json(count);
-    }
-  });
-});
-router.delete('/:id',function(req,res,next){
+    else{
 
-        User.deleteUser(req.params.id,function(err,count){
+    User.getAllUsers(function(err,rows){
 
             if(err)
             {
@@ -72,15 +31,52 @@ router.delete('/:id',function(req,res,next){
             }
             else
             {
-                res.json(count);
+                res.json({users:rows});
             }
+        });
+    }
+});
+router.post('/',function(req,res,next){
 
+        User.addUser(req.body,function(err,rows){
+            if(err)
+            {
+                res.json(err);
+            }
+            else{
+                res.json(rows[0]);              
+            }
         });
 });
+router.post('/:id',function(req,res,next){
+    User.deleteAll(req.body,function(err,count){
+        if(err)
+        {
+        res.json(err);
+        }
+        else
+        {
+        res.json(count);
+        }
+    });
+});
+router.delete('/:id',function(req,res,next){
+    User.deleteUser(req.params.id,function(err,count){
+
+        if(err)
+        {
+            res.json(err);
+        }
+        else
+        {
+            res.json(count);
+        }
+
+    });
+});
+
 router.put('/:id',function(req,res,next){
-
     User.updateUser(req.params.id,req.body,function(err,rows){
-
         if(err)
         {
             res.json(err);
@@ -92,9 +88,9 @@ router.put('/:id',function(req,res,next){
     });
 });
 router.put('/:id/state',function(req,res,next){
-
     var s = {
         user_id:req.params.id,
+        gamesPlayed:req.body.gamesPlayed,
         score: req.body.score
     } 
     State.addState(s,function(err,rows){
@@ -105,7 +101,7 @@ router.put('/:id/state',function(req,res,next){
         }
         else
         {
-            res.json(rows);
+            res.json(rows[0]);
         }
     });
 });
@@ -119,7 +115,7 @@ router.get('/:id/state',function(req,res,next){
         }
         else
         {
-            res.json(rows);
+            res.json(rows[0]);
         }
     });
 });
@@ -133,7 +129,7 @@ router.put('/:id/friends',function(req,res,next){
         }
         else
         {
-            res.json(rows);
+            res.json({"friends":rows});
         }
     });
 });
@@ -147,7 +143,7 @@ router.get('/:id/friends',function(req,res,next){
         }
         else
         {
-            res.json(rows);
+            res.json({"friends":rows});
         }
     });
 });
