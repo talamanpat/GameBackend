@@ -96,7 +96,7 @@ RESPONSE EXAMPLE:
 }
 ```
 
-GET /user/<id>
+GET /user/"userid"
 ```
 RESPONSE EXAMPLE:
 {
@@ -105,7 +105,7 @@ RESPONSE EXAMPLE:
 }
 ```
 
-PUT /user/<id>/state
+PUT /user/"userid"/state
 ```
 REQUEST EXAMPLE:
 {
@@ -114,7 +114,7 @@ REQUEST EXAMPLE:
 }
 ```
 
-GET /user/<id>/state
+GET /user/"userid"/state
 ```
 RESPONSE EXAMPLE:
 {
@@ -123,7 +123,7 @@ RESPONSE EXAMPLE:
 }
 ```
 
-PUT /user/<id>/friends
+PUT /user/"userid"/friends
 ```
 REQUEST EXAMPLE:
 {
@@ -147,7 +147,7 @@ RESPONSE EXAMPLE:
 }
 ```
 
-GET /user/<id>/friends
+GET /user/"userid"/friends
 ```
 RESPONSE EXAMPLE:
 {
