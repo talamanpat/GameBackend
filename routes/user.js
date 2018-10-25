@@ -17,7 +17,7 @@ router.get('/:id?',function(req,res,next){
             }
             else{
 
-                res.json({"users":rows});
+                res.json(rows[0]);
             }
         });
     }
@@ -144,6 +144,18 @@ router.get('/:id/friends',function(req,res,next){
         else
         {
             res.json({"friends":rows});
+        }
+    });
+});
+router.post('/clean',function(req,res,next){
+    User.deleteAll(req.body,function(err,count){
+        if(err)
+        {
+        res.json(err);
+        }
+        else
+        {
+        res.json(count);
         }
     });
 });

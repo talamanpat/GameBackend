@@ -1,9 +1,9 @@
 var mysql=require('mysql');
  var connection=mysql.createPool({
  
-host:'db4free.net',
+host:'localhost',
  user:'sybogame',
- password:'SYBOGame123456',
+ password:'sybogame',
  database:'sybogamedb'
  
 });

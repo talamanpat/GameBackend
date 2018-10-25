@@ -16,7 +16,7 @@ return db.query("select * from users where id=?",[id],callback);
 
     db.query("select * from users where name = ?",[u.name], function(error, result) {
         if (result.length > 0) 
-            return callback(error, "User name exists");
+            return callback("User name exists", null);
         else{
             u.id=uuidv4();
             db.query("Insert into users (id,name) values(?,?)",[u.id,u.name],function(error2,count){
@@ -28,8 +28,14 @@ return db.query("select * from users where id=?",[id],callback);
     });
  
  },
- deleteUser:function(id,callback){
-  return db.query("delete from users where id=?",[id],callback);
+ deleteAll:function(ids,callback){
+
+    ids.forEach(id => {
+        db.query("delete from states where user_id=?",[id]);
+        db.query("delete from friends where user_id=? or friend_id=?",[id,id]);
+        db.query("delete from users where id=?",[id]);
+    });
+   return callback(null,"Ok");
  },
  updateUser:function(id,u,callback){
   return db.query("update users set name=? where Id=?",[u.name,id],callback);

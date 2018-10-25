@@ -2,12 +2,42 @@ var chai = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../app');
 var should = chai.should();
+var randomstring = require("randomstring");
 
 chai.use(chaiHttp);
 
-describe('Users', function() {
-    var u1='c3901c85-f94e-4d34-80f3-767a07fb331a';
-    var u2='d27792de-fc62-464b-b315-4fdcb36a3dc8';
+describe('Tests', function() {
+  
+  var u1='';
+  var u2='';
+
+  
+    before('should add a users on /user POST', function(done) {
+      //first call to the mysql server, giving sometimes more timeout for the first network routing and connection
+      this.timeout(3000);
+      chai.request(server)
+        .post('/user')
+        .send({
+          "name": "Test"+randomstring.generate(7)
+          })
+        .end(function(err, res){
+          res.should.have.status(200);
+          res.body.should.have.property('id');
+          res.body.should.have.property('name');
+          u1=res.body.id;
+          
+          chai.request(server)
+          .post('/user')
+          .send({
+            "name": "Test"+randomstring.generate(7)
+            })
+          .end(function(err, res){
+            res.should.have.status(200);
+            u2=res.body.id;
+            done();
+            }); 
+        });
+    });
 
     it('should list ALL users on /user GET', function(done) {
         chai.request(server)
@@ -27,23 +57,14 @@ describe('Users', function() {
             done();
           });
       });
-    it('should add a SINGLE user on /user POST', function(done) {
-        chai.request(server)
-          .post('/user')
-          .send({
-            "name": "TestTalaman"
-            })
-          .end(function(err, res){
-            res.should.have.status(200);
-            done();
-          });
-      });
+
 
 
     it('should add a SINGLE state on /user/<userid>/state PUT', function(done) {
       chai.request(server)
         .put('/user/'+u1+'/state')
         .send({
+          "gamesPlayed": 2,
             "score": 950
             })
         .end(function(err, res){
@@ -84,5 +105,17 @@ describe('Users', function() {
             done();
           });
       });
+
+      after('should clean test data /user/clean POST', function(done) {
+        this.timeout(15000);
+        chai.request(server)
+          .post('/user/clean')
+          .send([u1,u2])
+          .end(function(err, res){
+            res.should.have.status(200);
+            done();
+          });
+      });
+
 });
 
